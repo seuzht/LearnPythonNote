@@ -1,13 +1,18 @@
 '''
+@description: dive into how to use descriptor, classproperty/instanceproperty and staticmethod/classmethod/instancemethod 
 @author: Dennis Zhang
 @date:2022/08/12
-@description: dive into how to use descriptor, classproperty/instanceproperty and staticmethod/classmethod/instancemethod 
-属性管理 :  _privateName ; __slot__ ; @property ; 描述符
+属性管理方式:  _privateName ; __slot__ ; @property ; 描述符
 '''
+#!/usr/bin/env python3
 
-#描述符类的作用
+
+#描述符类的作用：
 #代理一个类的属性，让程序员在引用一个对象属性时自定义要完成的工作
 #它是实现大部分Python类特性中最底层的数据结构的实现手段，是使用到装饰器或者元类的大型框架中的一个非常重要组件
+#描述符协议对__get__和__set__的要求（object参数，并含有__dict__对象）可以看出，描述符可以修饰的对象及调用的方式；
+
+
 
 #代理实例属性的描述符类，非共享实例属性,由调用者object的__dict__来保证非共享
 class instancepropertydescriptor(object):
@@ -59,7 +64,10 @@ class initonaccess(object):
 
 #实例对象需要被保存为实例之间共享的类属性，以节约资源
 #在全局导入时实例对象不能被初始化，因为其创建过程依赖某个全局应用状态/上下文
-#用来修饰一个实例方法
+#用来修饰一个实例方法,把实例方法变成一个实例属性来使用；
+#@property装饰器可以把一个实例方法修饰成实例属性来使用，但不是真正的实例属性，因为__dict__中没有；
+#lazyproperty描述符可以将一个实例方法变成一个真正的实例属性；所以只有在第一次调用时进行一次计算，而之后每次调用不会重复计算，会直接从__dict__中查找；
+#https://www.jianshu.com/p/708dc26f9b92
 class lazyproperty(object):
     def __init__(self,function) -> None:
         self.fget = function
