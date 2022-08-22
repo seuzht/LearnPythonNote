@@ -1,4 +1,5 @@
-*ref https://markdown.com.cn/basic-syntax/emphasis.html*
+*python ref "Expert Python Programming 2nd" and "Professinal Python"*
+*markdown formate ref https://markdown.com.cn/basic-syntax/emphasis.html*
 # LearnPythonNote
 This is a note of my python learning which contains all important python modules.
 Every single .py file contains all the key knowledge you should know about this specific theme.
