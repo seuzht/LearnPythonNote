@@ -88,9 +88,9 @@ def main():
 ##################################################################################################
 
 ##################################################################################################
-#2.改造c代码,通过对C代码接口加上python wrapper,使得其可以在python环境中被调用;
+#2.纯C扩展:改造源c代码,通过对C代码接口加上python wrapper,使得其可以在python环境中被调用;
     ## Python.h + Python/C API + C/C++ + 打包 => Python C扩展模块
-    ## 2.1 三步
+    ## 2.1 主要步骤
         ###2.1.1 定义cfunc_py接口作为源cfunc接口的wrapper,包含几个主要类型、宏和Python/C API:
             ####数据类型:PyObject 
             ####Apis:PyArg_ParseTuple;Py_BuildValue;PyErr_SetString();PyLong_FromLong
@@ -102,19 +102,16 @@ def main():
         ###2.1.5 setuptools构建 
     ## ref https://zhuanlan.zhihu.com/p/164598060
     ## ./extension.c
-#3.利用cython:
-    ## cython的C扩展主要是一个自动过程，它不需要你写一个.C文件，而是使用一种Cython特殊的后缀为.pyx扩展文件,
-    ## 经过cython库编译器处理后生成python库文件,Win下后缀为.pyd,Linux下为动态链接库.so,然后就可以在python里import了;
+#3.利用cython: 
+    ## cython的C扩展主要是一个自动过程，它不需要你写一个.C文件或者修改源C文件，而是python源到C源的源到源编译,
+    ## 经过cython库编译器处理后生成C扩展,再结合setuptools和distutil会打包成python库文件,Win下后缀为.pyd,Linux下为动态链接库.so,然后就可以在python里import了; 
+    ## 它可以用cythonize函数直接编译源py文件为c扩展;
+    ## 也可以利用cython语言编写可调用C/C++接口的.pyx文件,再用cythonize函数直接编译为C扩展;
     ## ref https://zhuanlan.zhihu.com/p/49498032
+    ## ref https://zhuanlan.zhihu.com/p/24311879
     ## 3.1 cython作为源码编译器
         ### 使用纯python代码创建扩展,不用修改源C代码,实现源到源编译;
         ### 并用cythonize函数将.py文件编译成c代码;本质上cython使用Python/C API执行了源到源的编译
-    ## 3.2 cython作为语言,。pyx文件
-        ### cdef 关键字声明接受和返回C类型的C风格函数 
-        ### with nogil
-        ### ref ./fibonacci.pyx文件
-
-from tkinter import N
 from setuptools import setup
 from Cython.Build import cythonize
 
@@ -122,3 +119,13 @@ setup(
     name = 'fibonacci',
     ext_modules=cythonize(['fibonacci.py'])
 )
+    ## 3.2 cython作为语言,编写.pyx文件;
+        ### pyx文件是C/C++与Python之间的桥梁，也就是pyx文件会将C/C++代码做一层包装，方便Python直接调用
+        ### cdef 关键字声明接受和返回C类型的C风格函数 
+        ### with nogil
+        ### 纯cython接口 ref ./fibonacci.pyx; 还可以调用C/C++接口或类 ref ./adapter.pyd  ./adapter.pyx 
+        ### ref https://blog.csdn.net/huachao1001/article/details/88253977
+from distutils.core import setup
+from Cython.Build import cythonize
+
+setup(ext_modules=cythonize("adapter.pyx"))

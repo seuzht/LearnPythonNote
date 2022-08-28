@@ -1,0 +1,17 @@
+#pxd 文件可以看成是Cython（即pyx文件）的头文件
+#pxd文件是pyx与C/C++之间的桥梁。
+#pyx是C/C++与Python之间的桥梁。
+
+
+cdef extern from "demo.cpp":
+    pass
+
+# Decalre the class with cdef
+cdef extern from "demo.h" namespace "demo":
+    cdef cppclass MyDemo:
+        MyDemo() except +
+        MyDemo(int) except +
+        int a
+        int mul(int )
+        int add(int )
+        void sayHello(char*)
