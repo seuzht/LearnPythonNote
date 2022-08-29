@@ -106,7 +106,7 @@ def main():
     ## cython的C扩展主要是一个自动过程，它不需要你写一个.C文件或者修改源C文件，而是python源到C源的源到源编译,
     ## 经过cython库编译器处理后生成C扩展,再结合setuptools和distutil会打包成python库文件,Win下后缀为.pyd,Linux下为动态链接库.so,然后就可以在python里import了; 
     ## 它可以用cythonize函数直接编译源py文件为c扩展;
-    ## 也可以利用cython语言编写可调用C/C++接口的.pyx文件,再用cythonize函数直接编译为C扩展;
+    ## 也可以利用cython语言编写可调用C/C++文件中接口的.pyx文件,再用cythonize函数直接编译为c扩展;
     ## ref https://zhuanlan.zhihu.com/p/49498032
     ## ref https://zhuanlan.zhihu.com/p/24311879
     ## 3.1 cython作为源码编译器
@@ -119,7 +119,7 @@ setup(
     name = 'fibonacci',
     ext_modules=cythonize(['fibonacci.py'])
 )
-    ## 3.2 cython作为语言,编写.pyx文件;
+    ## 3.2 cython作为语言编写.pyx文件,将现有的C/C++源文件用.pyd和.pyx包装;
         ### pyx文件是C/C++与Python之间的桥梁，也就是pyx文件会将C/C++代码做一层包装，方便Python直接调用
         ### cdef 关键字声明接受和返回C类型的C风格函数 
         ### with nogil
